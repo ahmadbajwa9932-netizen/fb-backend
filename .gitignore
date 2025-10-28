@@ -1,4 +1,5 @@
 __pycache__/
-venv/
-.env
 *.pyc
+downloads/
+*.mp4
+.env
