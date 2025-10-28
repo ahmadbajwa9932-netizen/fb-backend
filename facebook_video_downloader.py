@@ -13,6 +13,27 @@ class FacebookVideoDownloader:
         self.retry_delay = 2
         self.last_extracted_info = None  # Store metadata for API access
 
+        # 🔥 Call cleanup when the downloader starts
+        self.cleanup_old_files()
+
+    def cleanup_old_files(self):
+        """Delete files older than 24 hours (1 day)"""
+        now = time.time()
+        one_day_seconds = 24 * 60 * 60
+
+        for filename in os.listdir(self.download_folder):
+            file_path = os.path.join(self.download_folder, filename)
+
+            if os.path.isfile(file_path):
+                file_age = now - os.path.getmtime(file_path)
+
+                if file_age > one_day_seconds:
+                    print(f"🗑️ Removing old file: {filename}")
+                    try:
+                        os.remove(file_path)
+                    except Exception as e:
+                        print(f"⚠️ Could not delete {filename}: {e}")
+
     def extract_video_metadata(self, video_url):
         """
         Extract video metadata without downloading the video.
@@ -307,3 +328,4 @@ class FacebookVideoDownloader:
             return response.status_code == 200
         except:
             return False
+
